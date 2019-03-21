@@ -8,6 +8,7 @@
 key=NTg3ZDQ1NTZkNjQ4M2RiMDk2MGY0ODNkMzhmYzM0ZDNlZDdmNTBhN2Y2YjIzNGM5MjEzOGViMzg1Nzc1MjhlZA
 
 #VARs (niet aanpassen)
+# voor de readability zou ik het zonder / doen en die hieronder prependen
 dat_folder=data/
 raw_datadir=data/raw/
 raw_prodls=data/raw/products.raw
@@ -20,17 +21,19 @@ json_img=images.json
 #Valideer en creer folder structuur
 if [ -d "$dat_folder" ]; then
   if [ -d "$raw_datadir" ]; then
-  if [ -d "$json_datadir" ]; then
-  echo "data en rawdata folder zijn aanwezig"
-  else
-    echo "raw data folder wordt aangemaakt"
-    mkdir $raw_datadir
-  fi
-  if [ -d "$json_datadir" ]; then
-    echo "data en json data folder zijn aanwezig"
-  else
-    echo "data en json data folder wordt aangemaakt"
-    mkdir $json_datadir
+    
+    if [ -d "$json_datadir" ]; then
+      echo "data en rawdata folder zijn aanwezig"
+    else
+      echo "raw data folder wordt aangemaakt"
+      mkdir $raw_datadir
+    fi
+    if [ -d "$json_datadir" ]; then
+      echo "data en json data folder zijn aanwezig"
+    else
+      echo "data en json data folder wordt aangemaakt"
+      mkdir $json_datadir
+    fi
   fi
 else
   echo "geen data folder aangetroffen en folder structuur wordt aangemaakt"
@@ -43,11 +46,11 @@ fi
 #Hier worden de functies gedefinieerd
 #get_prod download alle producten naar de raw data folder
 get_prod() {
-  curl -H "Authorization: Bearer $key" https://api.sandbox.bigbuy.eu/rest/catalog/products.json?isoCode=en > $raw_datadir$raw_prod
+  curl -H "Content-type: application/json" -H "Accept: application/json" -H "Authorization: Bearer $key" https://api.sandbox.bigbuy.eu/rest/catalog/products.json?isoCode=en > $raw_datadir$raw_prod
 }
 #get_prod_img download alle afbeelding informatie over de producten naar de raw data folder
 get_prod_img() {
-  curl -H "Authorization: Bearer $key" https://api.sandbox.bigbuy.eu/rest/catalog/products.json?isoCode=en > $raw_datadir$raw_img
+  curl -H "Content-type: application/json" -H "Accept: application/json" -H "Authorization: Bearer $key" https://api.sandbox.bigbuy.eu/rest/catalog/products.json?isoCode=en > $raw_datadir$raw_img
 }
 
 #get_prod
