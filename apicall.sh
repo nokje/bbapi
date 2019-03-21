@@ -2,7 +2,6 @@
 
 #documentatie van de API is te vinden bij http://api.bigbuy.eu/doc
 
-
 #Stel alle variabelen in zodat deze overeenkomen met jou situatie
 #Bij key vul je jouw api key in
 key='cat apikey'
@@ -18,7 +17,16 @@ json_datadir=data/json
 json_prod=products.json
 json_img=images.json
 
-#Valideer en creer folder structuur
+#Hier worden de functies gedefinieerd
+#get_prod download alle producten naar de raw data folder
+get_prod() {
+  curl -H "Content-type: application/json" -H "Accept: application/json" -H "Authorization: Bearer $key" https://api.sandbox.bigbuy.eu/rest/catalog/products.json?isoCode=en > $raw_datadir/$raw_prod
+}
+#get_prod_img download alle afbeelding informatie over de producten naar de raw data folder
+get_prod_img() {
+  curl -H "Content-type: application/json" -H "Accept: application/json" -H "Authorization: Bearer $key" https://api.sandbox.bigbuy.eu/rest/catalog/products.json?isoCode=en > $raw_datadir/$raw_img
+}
+#omdat if statements een waarde nodig hebben en ik niets wil invullen, maak ik maar een dummy functie die niks doet. Maar dan is if statement en bash wel gerustgesteld...
 dummy () {
   echo >/dev/null
 }
@@ -45,17 +53,7 @@ else
   mkdir $json_datadir
 fi
 
-
-#Hier worden de functies gedefinieerd
-#get_prod download alle producten naar de raw data folder
-get_prod() {
-  curl -H "Content-type: application/json" -H "Accept: application/json" -H "Authorization: Bearer $key" https://api.sandbox.bigbuy.eu/rest/catalog/products.json?isoCode=en > $raw_datadir/$raw_prod
-}
-#get_prod_img download alle afbeelding informatie over de producten naar de raw data folder
-get_prod_img() {
-  curl -H "Content-type: application/json" -H "Accept: application/json" -H "Authorization: Bearer $key" https://api.sandbox.bigbuy.eu/rest/catalog/products.json?isoCode=en > $raw_datadir/$raw_img
-}
-
+#Controleren of er data beschikbaar is om mee aan de gang te gaan. Zo niet, download ik het eerst even.
 if [ -f $raw_datadir/$raw_prod ]; then
   echo "CONTENT CHECK: "$raw_prod" is available, so not downloading nieuw content"
 else
