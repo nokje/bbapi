@@ -12,7 +12,7 @@ raw_img=images.raw
 json_datadir=data/json
 json_prod=products.json
 json_img=images.json
-key='cat apikey'
+key=$( cat apikey)
 dt=$(date '+%d/%m/%Y %H:%M:%S');
 
 #clean_start; scrubs the place en makes it ready to play again
@@ -65,7 +65,7 @@ get_prod() {
 #get_prod_img; download alle afbeelding informatie over de producten naar de raw data folder
 get_prod_img() {
   echo "$dt [bb.api] CONTENT DOWNLOAD : starting downloading raw images data"
-  curl -H "Content-type: application/json" -H "Accept: application/json" -H "Authorization: Bearer $key" https://api.sandbox.bigbuy.eu/rest/catalog/products.json?isoCode=en 2>/dev/null > $raw_datadir/$raw_img
+  curl -H "Content-type: application/json" -H "Accept: application/json" -H "Authorization: Bearer $key" https://api.sandbox.bigbuy.eu/rest/catalog/productsimages.json?isoCode=en 2>/dev/null > $raw_datadir/$raw_img
   echo "$dt [bb.api] CONTENT DOWNLOAD : finished downloading raw images data"
 }
 #check_dir; valideer en creer folder structuur
@@ -114,11 +114,11 @@ fi
 #go_rince; Rincing raw data to human readable files
 go_rinse () {
 if [ $(ls $raw_prodls 2>/dev/null | wc -l) == 1 ]; then
-    echo "$dt [bb.api] DATA RINSING : found raw product data and rincing it now for human readability"
+    echo "$dt [bb.api] DATA RINSING : found raw product data and rinsing it now for human readability"
     cat $raw_prodls | jq > $json_datadir/$json_prod
 fi
 if [ $(ls $raw_imagls 2>/dev/null | wc -l) == 1 ]; then
-    echo "$dt [bb.api] DATA RINSING : found raw images data and rincing it now for human readability"
+    echo "$dt [bb.api] DATA RINSING : found raw images data and rinsing it now for human readability"
     cat $raw_imagls | jq > $json_datadir/$json_img
   else
     echo "$dt [bb.api] DATA RINSING  : no raw data to rinse"
@@ -130,5 +130,4 @@ check_auth
 check_dir
 check_content
 go_rinse
-
-tree 
+tree
