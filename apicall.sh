@@ -5,40 +5,43 @@
 
 #Stel alle variabelen in zodat deze overeenkomen met jou situatie
 #Bij key vul je jouw api key in
-key=NTg3ZDQ1NTZkNjQ4M2RiMDk2MGY0ODNkMzhmYzM0ZDNlZDdmNTBhN2Y2YjIzNGM5MjEzOGViMzg1Nzc1MjhlZA
+key='cat apikey'
 
 #VARs (niet aanpassen)
-# voor de readability zou ik het zonder / doen en die hieronder prependen
-dat_folder=data/
-raw_datadir=data/raw/
+dat_folder=data
+raw_datadir=data/raw
 raw_prodls=data/raw/products.raw
+raw_imagls=data/raw/images.raw
 raw_prod=products.raw
 raw_img=images.raw
-json_datadir=/data/json/
+json_datadir=data/json
 json_prod=products.json
 json_img=images.json
 
 #Valideer en creer folder structuur
+dummy () {
+  echo >/dev/null
+}
+
+#Valideer en creer folder structuur
 if [ -d "$dat_folder" ]; then
-  if [ -d "$raw_datadir" ]; then
-    
-    if [ -d "$json_datadir" ]; then
-      echo "data en rawdata folder zijn aanwezig"
-    else
-      echo "raw data folder wordt aangemaakt"
-      mkdir $raw_datadir
-    fi
-    if [ -d "$json_datadir" ]; then
-      echo "data en json data folder zijn aanwezig"
-    else
-      echo "data en json data folder wordt aangemaakt"
-      mkdir $json_datadir
-    fi
-  fi
+  dummy
 else
-  echo "geen data folder aangetroffen en folder structuur wordt aangemaakt"
+  echo "DIRECTORY CHECK: data dir is NOT, so i'm creating whole file structure"
   mkdir $dat_folder
   mkdir $raw_datadir
+  mkdir $json_datadir
+fi
+if [ -d "$raw_datadir" ]; then
+  dummy
+else
+  echo "DIRECTORY CHECK: "$raw_datadir" dir is NOT in place and will be created"
+  mkdir $raw_datadir
+fi
+if [ -d "$json_datadir" ]; then
+  dummy
+else
+  echo "DIRECTORY CHECK: "$json_datadir" dir is NOT in place and will be created"
   mkdir $json_datadir
 fi
 
@@ -46,34 +49,34 @@ fi
 #Hier worden de functies gedefinieerd
 #get_prod download alle producten naar de raw data folder
 get_prod() {
-  curl -H "Content-type: application/json" -H "Accept: application/json" -H "Authorization: Bearer $key" https://api.sandbox.bigbuy.eu/rest/catalog/products.json?isoCode=en > $raw_datadir$raw_prod
+  curl -H "Content-type: application/json" -H "Accept: application/json" -H "Authorization: Bearer $key" https://api.sandbox.bigbuy.eu/rest/catalog/products.json?isoCode=en > $raw_datadir/$raw_prod
 }
 #get_prod_img download alle afbeelding informatie over de producten naar de raw data folder
 get_prod_img() {
-  curl -H "Content-type: application/json" -H "Accept: application/json" -H "Authorization: Bearer $key" https://api.sandbox.bigbuy.eu/rest/catalog/products.json?isoCode=en > $raw_datadir$raw_img
+  curl -H "Content-type: application/json" -H "Accept: application/json" -H "Authorization: Bearer $key" https://api.sandbox.bigbuy.eu/rest/catalog/products.json?isoCode=en > $raw_datadir/$raw_img
 }
 
-#get_prod
-#get_prod_img
+if [ -f $raw_datadir/$raw_prod ]; then
+  echo "CONTENT CHECK: "$raw_prod" is available, so not downloading nieuw content"
+else
+ get_prod
+fi
+if [ -f $raw_datadir/$raw_img ]; then
+  echo "CONTENT CHECK: "$raw_img" is available, so not downloading nieuw content"
+else
+ get_prod_img
+fi
 
 #Rincing raw data to human readable files
 if [ $(ls $raw_prodls 2>/dev/null | wc -l) == 1 ]; then
-  cat $raw_prodls | jq > $json_datadir$json_prod
-else
-  echo "nothing to rince!"
+    echo "DATA RINCING: found raw product data and rincing it now for human readability"
+    cat $raw_prodls | jq > $json_datadir/$json_prod
+fi
+if [ $(ls $raw_imagls 2>/dev/null | wc -l) == 1 ]; then
+    echo "DATA RINCING: found raw images data and rincing it now for human readability"
+    cat $raw_imagls | jq > $json_datadir/$json_img
+  else
+    echo "DATA RINCING: no raw data to rinse"
 fi
 
-
-
-#"\ -H\ "Authorization: Bearer NTg3ZDQ1NTZkNjQ4M2RiMDk2MGY0ODNkMzhmYzM0ZDNlZDdmNTBhN2Y2YjIzNGM5MjEzOGViMzg1Nzc1MjhlZA"
-
-#Example CURL
-#curl --header "Authorization: Bearer NTg3ZDQ1NTZkNjQ4M2RiMDk2MGY0ODNkMzhmYzM0ZDNlZDdmNTBhN2Y2YjIzNGM5MjEzOGViMzg1Nzc1MjhlZA" https://api.sandbox.bigbuy.eu/rest/catalog/categories.json?isoCode=en > output.raw
-#curl -H "Authorization: Bearer NTg3ZDQ1NTZkNjQ4M2RiMDk2MGY0ODNkMzhmYzM0ZDNlZDdmNTBhN2Y2YjIzNGM5MjEzOGViMzg1Nzc1MjhlZA" https://api.sandbox.bigbuy.eu/rest/catalog/categories.json?isoCode=en > output.raw
-#curlkey https://api.sandbox.bigbuy.eu/rest/catalog/categories.json?isoCode=en > output.raw
-#echo "curl -v $key https://api.sandbox.bigbuy.eu/rest/catalog/categories.json?isoCode=en > output.raw"
-#echo "curl $key https://api.sandbox.bigbuy.eu/rest/catalog/categories.json?isoCode=en > output.raw"
-
-#Verwerk de output data van raw data naar human readable jsonformat
-#cat output.raw | jq > output.json
-#curl -H "Accept: application/xhtml+xml"  -H "Authorization: Bearer NTg3ZDQ1NTZkNjQ4M2RiMDk2MGY0ODNkMzhmYzM0ZDNlZDdmNTBhN2Y2YjIzNGM5MjEzOGViMzg1Nzc1MjhlZA" https://api.sandbox.bigbuy.eu/rest/catalog/categories.json?isoCode=en > output.raw
+tree .
