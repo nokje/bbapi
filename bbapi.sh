@@ -12,7 +12,7 @@ raw_img=images.raw
 json_datadir=data/json
 json_prod=products.json
 json_img=images.json
-key=$( cat apikey)
+key=$( cat apikey )
 dt=$(date '+%d/%m/%Y %H:%M:%S');
 
 #clean_start; scrubs the place en makes it ready to play again
