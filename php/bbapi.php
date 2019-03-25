@@ -1,17 +1,16 @@
 <?php
-// Get cURL resource
-$curl = curl_init();
-$options = array(
-    CURLOPT_RETURNTRANSFER => 0,
-    CURLOPT_URL => 'https://api.sandbox.bigbuy.eu/rest/catalog/products.json?isoCode=en',
-    CURLOPT_HTTPHEADER => 'test: asf',
-)
 
-// Set some options - we are passing in a useragent too here
-curl_setopt (resource $curl, int $options);
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, 'https://api.sandbox.bigbuy.eu/rest/catalog/products.json?isoCode=en');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+  'Authorization: Bearer NTg3ZDQ1NTZkNjQ4M2RiMDk2MGY0ODNkMzhmYzM0ZDNlZDdmNTBhN2Y2YjIzNGM5MjEzOGViMzg1Nzc1MjhlZA',
+  'Content-type: application/json',
+));
+$response = curl_exec($ch);
+curl_close($ch);
 
-// Send the request & save response to $resp
-$resp = curl_exec($curl);
 
-// Close request to clear up some resources
-curl_close($curl);
+
+    echo $response;
+?>
