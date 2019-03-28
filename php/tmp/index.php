@@ -8,7 +8,8 @@ require 'inc/mysql.inc.php';
 require 'inc/api.inc.php';
 
 // setup the class and pass it's config!
-$m = new Mysql($config["database"]);
+$m = new MySQL($config["database"]);
+
 $api = new Api($config["api"]);
 
 // now we can do something
