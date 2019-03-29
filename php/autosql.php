@@ -5,7 +5,7 @@ $user = "bbapi";
 $password = "password";
 $db_name = "bbapi";
 
-$mysqli = new mysqli("$server", "$user", "$password", "$db_name");
+$mysqli = new mysqli_connect("$server", "$user", "$password", "$db_name");
 
 /* check connection */
 if ($mysqli->connect_errno) {
@@ -14,24 +14,32 @@ if ($mysqli->connect_errno) {
 }
 
 // get object id to fill foreach statements
-$query = "SELECT id FROM products";
-$result = $mysqli->query($query);
-$id = $result->fetch_array();
-var_dump ($id->);
+// $q = Query
+$q = $mysqli->query("SELECT `id` FROM `products`");
+
+$// $f = Fetch
+$f = $result->fetch_array();
+
+// Dit zou een Multi Dimentional Array moeten zijn dus hier moet je een Foreach achter plakken
+var_dump ($f);
 #echo "test url /tasd/fasf/{$id}.json";
 #printf ("%s (%s)\n", $row[0], $row[1]);
 die();
 
 // curl statement
-foreach ($id as $prod)
-{
-$ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, "https://api.sandbox.bigbuy.eu/rest/catalog/productinformation/{$prod}.json?isoCode=en&_format=json");
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-  'Authorization: Bearer NTg3ZDQ1NTZkNjQ4M2RiMDk2MGY0ODNkMzhmYzM0ZDNlZDdmNTBhN2Y2YjIzNGM5MjEzOGViMzg1Nzc1MjhlZA',
-  'Content-type: application/json',
-));
+// Multidimentional Array, $f = fetchen
+foreach ($f as $key => $product) {
+  // check output dit zou een single product moeten zijn
+  // $product->id; of $product["id"] uit mijn hoofd
+  var_dump($product);
+  $ch = curl_init();
+  curl_setopt($ch, CURLOPT_URL, "https://api.sandbox.bigbuy.eu/rest/catalog/productinformation/{$product->id}.json?isoCode=en&_format=json");
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+      'Authorization: Bearer NTg3ZDQ1NTZkNjQ4M2RiMDk2MGY0ODNkMzhmYzM0ZDNlZDdmNTBhN2Y2YjIzNGM5MjEzOGViMzg1Nzc1MjhlZA',
+      'Content-type: application/json',
+    )
+  );
   curl_exec($ch);
   curl_close($ch);
 }
