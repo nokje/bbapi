@@ -5,10 +5,8 @@ $username = "bbapi";
 $password = "password";
 $dbname = "bbapi";
 
-// Create connection
+// Create & check connection
 $conn = mysqli_connect($servername, $username, $password, $dbname);
-
-// Check connection
 if (!$conn) {
    die("Connection failed: " . $conn->connect_error);
 }
@@ -29,8 +27,6 @@ $test = json_decode($response);
 // curl response inleren in een foreach
 foreach($test as $value)
 {
-
-
 
 // sql to parse value
 $sql = "
