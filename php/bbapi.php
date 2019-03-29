@@ -26,40 +26,21 @@ curl_close($ch);
 
 $test = json_decode($response);
 
-// curl response inleren
+// curl response inleren in een foreach
 foreach($test as $value)
 {
-    var_dump ($value->dateUpdDescription);
+
+
 
 // sql to parse value
 $sql = "
 INSERT INTO products (manufacturer,id,sku,ean13,weight,height,width,depth,dateUpd,category,categories,dateUpdDescription,dateUpdImages,dateUpdStock,wholesalePrice,retailPrice,dateAdd,video,active,images,attributes,tags,taxRate,taxId,dateUpdProperties,dateUpdCategories,inShopsPrice) VALUES ('$value->manufacturer','$value->id','$value->sku','$value->ean13','$value->weight','$value->height','$value->width','$value->depth','$value->dateUpd','$value->category','$value->categories','$value->dateUpdDescription','$value->dateUpdImages','$value->dateUpdStock','$value->wholesalePrice','$value->retailPrice','$value->dateAdd','$value->video','$value->active','$value->images','$value->attributes','$value->tags','$value->taxRate','$value->taxId','$value->dateUpdProperties','$value->dateUpdCategories','$value->inShopsPrice')
 ";
-#$sql = "
-#INSERT INTO products (manufacturer, id, sku, ean13, weight, height, width, depth, dateUpd, category)
-#VALUES ('$value->manufacturer','$value->id','$value->sku','$value->ean13','$value->weight','$value->height','$value->width','$value->depth','$value->dateUpd','$value->category')
-#";
-#$sql = "
-#INSERT INTO products (manufacturer, id, sku)
-#VALUES ('$value->manufacturer','$value->id','$value->sku')
-#";
-$conn->query($sql);
 
-    echo "Error creating table: " . $conn->error;
-    echo "$sql";
-#die();
+//execute $sql quiry
+  if ($conn->query($sql) === TRUE) {
+    } else {
+     echo "\n" . $conn->error;
+    }
 }
-
-// sql to parse value
-#$sql = "INSERT INTO products
-#  (manufacturer) VALUES
-#  ('test5')
-#  ";
-
-#if ($conn->query($sql) === TRUE) {
-#    echo "Value processed successfully";
-#} else {
-#    echo "Error creating table: " . $conn->error;
-#}
-
 ?>

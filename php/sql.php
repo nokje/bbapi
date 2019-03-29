@@ -12,13 +12,13 @@ $sql = "CREATE TABLE products (
   dateUpd VARCHAR(20),
   category VARCHAR(5),
   categories VARCHAR(5),
-  dateUpdDescription VARCHAR(5),
-  dateUpdImages VARCHAR(5),
+  dateUpdDescription VARCHAR(20),
+  dateUpdImages VARCHAR(20),
   dateUpdStock VARCHAR(20),
-  wholesalePrice VARCHAR(5),
-  retailPrice VARCHAR(5),
+  wholesalePrice VARCHAR(20),
+  retailPrice VARCHAR(20),
   dateAdd VARCHAR(20),
-  video VARCHAR(5),
+  video VARCHAR(20),
   active VARCHAR(5),
   images VARCHAR(5),
   attributes VARCHAR(5),
@@ -27,8 +27,8 @@ $sql = "CREATE TABLE products (
   taxId VARCHAR(5),
   dateUpdProperties VARCHAR(20),
   dateUpdCategories VARCHAR(20),
-  inShopsPrice VARCHAR(5),
-  reg_date TIMESTAMP
+  inShopsPrice VARCHAR(20),
+  reg_date DATETIME
 )";
 
 if ($conn->query($sql) === TRUE) {
