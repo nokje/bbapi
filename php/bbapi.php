@@ -1,5 +1,19 @@
 <?php
+//DATABASE connection
+$servername = "127.0.0.1:32783";
+$username = "bbapi";
+$password = "password";
+$dbname = "bbapi";
 
+// Create connection
+$conn = mysqli_connect($servername, $username, $password, $dbname);
+
+// Check connection
+if (!$conn) {
+   die("Connection failed: " . $conn->connect_error);
+}
+
+// curl gets product data
 $ch = curl_init();
 curl_setopt($ch, CURLOPT_URL, 'https://api.sandbox.bigbuy.eu/rest/catalog/products.json?isoCode=en');
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -10,64 +24,42 @@ curl_setopt($ch, CURLOPT_HTTPHEADER, array(
 $response = curl_exec($ch);
 curl_close($ch);
 
+$test = json_decode($response);
 
-  echo "hij doet het";
-#    echo $response;
+// curl response inleren
+foreach($test as $value)
+{
+    var_dump ($value->dateUpdDescription);
 
-//DATABASE connection
-$servername = "127.0.0.1:32781";
-$username = "bbapi";
-$password = "password";
-$dbname = "bbapi";
+// sql to parse value
+$sql = "
+INSERT INTO products (manufacturer,id,sku,ean13,weight,height,width,depth,dateUpd,category,categories,dateUpdDescription,dateUpdImages,dateUpdStock,wholesalePrice,retailPrice,dateAdd,video,active,images,attributes,tags,taxRate,taxId,dateUpdProperties,dateUpdCategories,inShopsPrice) VALUES ('$value->manufacturer','$value->id','$value->sku','$value->ean13','$value->weight','$value->height','$value->width','$value->depth','$value->dateUpd','$value->category','$value->categories','$value->dateUpdDescription','$value->dateUpdImages','$value->dateUpdStock','$value->wholesalePrice','$value->retailPrice','$value->dateAdd','$value->video','$value->active','$value->images','$value->attributes','$value->tags','$value->taxRate','$value->taxId','$value->dateUpdProperties','$value->dateUpdCategories','$value->inShopsPrice')
+";
+#$sql = "
+#INSERT INTO products (manufacturer, id, sku, ean13, weight, height, width, depth, dateUpd, category)
+#VALUES ('$value->manufacturer','$value->id','$value->sku','$value->ean13','$value->weight','$value->height','$value->width','$value->depth','$value->dateUpd','$value->category')
+#";
+#$sql = "
+#INSERT INTO products (manufacturer, id, sku)
+#VALUES ('$value->manufacturer','$value->id','$value->sku')
+#";
+$conn->query($sql);
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-// Check connection
-if ($conn->connect_error) {
-   die("Connection failed: " . $conn->connect_error);
+    echo "Error creating table: " . $conn->error;
+    echo "$sql";
+#die();
 }
 
-// sql to create table
-$sql = "CREATE TABLE products (
-obj_id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-manufacturer VARCHAR(15),
-id VARCHAR(10),
-sku VARCHAR(30),
-ean13 VARCHAR(20),
-weight VARCHAR(5),
-height VARCHAR(5),
-width VARCHAR(5),
-depth VARCHAR(5),
-dateUpd VARCHAR(20),
-category VARCHAR(5),
-categories VARCHAR(5),
-dateUpdDescription VARCHAR(5),
-dateUpdImages VARCHAR(5),
-dateUpdStock VARCHAR(20),
-wholesalePrice VARCHAR(5),
-retailPrice VARCHAR(5),
-dateAdd VARCHAR(20),
-video VARCHAR(5),
-active VARCHAR(5),
-images VARCHAR(5),
-attributes VARCHAR(5),
-tags VARCHAR(5),
-taxRate VARCHAR(5),
-taxId VARCHAR(5),
-dateUpdProperties VARCHAR(20),
-dateUpdCategories VARCHAR(20),
-inShopsPrice VARCHAR(5),
-reg_date TIMESTAMP,
-)";
+// sql to parse value
+#$sql = "INSERT INTO products
+#  (manufacturer) VALUES
+#  ('test5')
+#  ";
 
-if ($conn->query($sql) === TRUE) {
-   echo "Table MyGuests created successfully";
-} else {
-   echo "Error creating table: " . $conn->error;
-   echo "" ;
-}
-
-$conn->close();
-
+#if ($conn->query($sql) === TRUE) {
+#    echo "Value processed successfully";
+#} else {
+#    echo "Error creating table: " . $conn->error;
+#}
 
 ?>

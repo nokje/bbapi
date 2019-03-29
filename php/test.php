@@ -1,15 +1,26 @@
 <?php
-$db_host        = '127.0.0.1:32781';
-$db_user        = 'bbapi';
-$db_pass        = 'password';
-$db_database    = 'bbapi';
-#$db_port        = '32773';
+//DATABASE connection
+$servername = "127.0.0.1:32783";
+$username = "bbapi";
+$password = "password";
+$dbname = "bbapi";
 
-$link = mysqli_connect($db_host,$db_user,$db_pass,$db_database);
+// Create connection
+$conn = mysqli_connect($servername, $username, $password, $dbname);
 
 // Check connection
-if (mysqli_connect_errno())
- {
- echo "Failed to connect to MySQL: " . mysqli_connect_error();
- }
+if (!$conn) {
+   die("Connection failed: " . $conn->connect_error);
+}
+
+// sql to create table
+$sql = "INSERT INTO
+ products (manufacturer)
+ VALUES ('test5')";
+
+if ($conn->query($sql) === TRUE) {
+    echo "Value processed successfully";
+} else {
+    echo "Error creating table: " . $conn->error;
+}
 ?>
