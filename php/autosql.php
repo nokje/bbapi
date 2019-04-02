@@ -21,8 +21,7 @@
   foreach ($products as $product) {
     //Get product //
     $prod_id = ($product['id']);
-  // URL met product ID
-  echo  "https://api.sandbox.bigbuy.eu/rest/catalog/$prod_id/test";
+    // Get API url with product ID
+    $api_url = "https://api.sandbox.bigbuy.eu/rest/catalog/$prod_id/test";
   die();
   }
-?>
