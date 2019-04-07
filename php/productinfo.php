@@ -1,6 +1,19 @@
 <?php
   require ('config/db.php');
 
+  /*
+
+    Dit gaat niet werken, je moet andersom kijken. Wat je nu doet is de DB records laden, loopen en per stuk informatie opvragen. Dit kan echter niet bij deze specifieke API
+    omdat ze er een limiet op hebben gezet van 1 request per 5 seconden. Dus in onderstaande code moet je dan een sleep() zetten om niet over die limit heen te vliegen. Resultaat
+    is dat je script dagen duurt (het zijn 200000+ producten).
+
+    Wat je beter kunt doen:
+    1 CURL request naar /rest/catalog/productsinformation waaromee je alle product information in 1x in json terug krijgt. Hierna loop je door ieder product uit deze JSON heen
+    en doe je een SELECT query op het EAN nummer. Als het EAN nummer bekend is staat hij in je DB en pak je de overige JSON om je record te updaten.
+
+  */
+
+
   //Create query
   $query_get = 'SELECT * FROM products;';
   // Get Result
